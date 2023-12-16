@@ -1,24 +1,7 @@
-# hello-vue-app
+# Vue weather app
 
-## Project setup
-```
-npm install
-```
+Canon event for every developer, so here I am :]
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+Openweathermap, quotable, axios
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Still working on styles and some more functionality
