@@ -1,6 +1,15 @@
-:root {
-  --text-shadow: -2px 2px 1px rgba(0, 0, 0, 0.46);
-  --text-color: #333333;
+$text-color: #333333;
+
+@mixin display-flex {
+  display: flex;
+  flex-direction: column;
+}
+@mixin forecast-item {
+  background-color: rgba(255, 255, 255, 0.25);
+  border-top: 0.3px solid #dde7ff;
+  border-right: 0.3px solid #dde7ff;
+  border-radius: 16px;
+  box-shadow: #00000026 1.95px 1.95px 2.6px;
 }
 @font-face {
   font-family: "NunitoLight";
@@ -16,6 +25,8 @@
   box-sizing: border-box;
 }
 body {
+  font-size: 18px;
+  color: $text-color;
   font-family: "NunitoLight", Arial, sans-serif;
 }
 #bg {
@@ -25,18 +36,18 @@ body {
   justify-content: center;
   padding: 40px;
   min-height: 100vh;
-}
-#bg.night {
-  background-image: url(./assets/images/night.jpg);
-}
-#bg.morning {
-  background-image: url(./assets/images/morning.jpg);
-}
-#bg.day {
-  background-image: url(./assets/images/day.jpg);
-}
-#bg.evening {
-  background-image: url(./assets/images/evening.jpg);
+  &.night {
+    background-image: url(./assets/images/night.jpg);
+  }
+  &.morning {
+    background-image: url(./assets/images/morning.jpg);
+  }
+  &.day {
+    background-image: url(./assets/images/day.jpg);
+  }
+  &.evening {
+    background-image: url(./assets/images/evening.jpg);
+  }
 }
 main {
   display: grid;
@@ -44,7 +55,7 @@ main {
   padding: 40px;
   width: 70%;
   border-radius: 16px;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(25px);
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   animation: slide-in 1s ease-out;
 }
@@ -74,15 +85,11 @@ main {
     transform: rotate(1turn);
   }
 }
-.greeting {
-  font-size: 30px;
-  color: #fff;
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.46);
-}
 .forecast-wrap {
-  display: flex;
-  flex-direction: column;
+  @include display-flex();
+  width: 90%;
   align-items: center;
+  justify-content: space-around;
 }
 .no-info {
   color: var(--text-color);
@@ -100,7 +107,7 @@ main {
   font-family: "NunitoLight", Arial, sans-serif;
   text-align: center;
   padding: 15px;
-  color: var(--text-color);
+  color: $text-color;
   font-size: 20px;
   border: none;
   outline: none;
@@ -115,33 +122,66 @@ main {
   background-color: rgba(255, 255, 255, 0.75);
   border-radius: 16px;
 }
+.today {
+  @include display-flex();
+  @include forecast-item();
+  align-items: center;
+  padding: 30px;
+}
 .location {
   display: flex;
   align-items: center;
-  color: #f0f8ff;
+  // color: #f0f8ff;
   font-size: 20px;
   font-weight: 600;
   letter-spacing: 2px;
 }
-.location-img {
-  height: 25px;
-}
-.temperature {
+.temperature-wrap {
+  // @include display-flex();
   font-family: "Zen", Arial, sans-serif;
-  display: flex;
   font-size: 90px;
-  color: #fff;
-  text-shadow: var(--text-shadow);
-  background-color: rgba(255, 255, 255, 0.25);
-  padding: 30px;
-  border-radius: 16px;
-  margin: 30px;
-  box-shadow: 2px 3px 0px 1px rgba(0, 0, 0, 0.25);
+  // align-items: center;
+  // color: #fff;
+  // text-shadow: var(--text-shadow);
+  // background-color: rgba(255, 255, 255, 0.25);
+  // padding: 10px 30px 30px 30px;
+  // border-radius: 16px;
+  // margin: 30px;
+  // box-shadow: 2px 3px 0px 1px rgba(0, 0, 0, 0.25);
 }
-
+.temp-main {
+  display: flex;
+}
 .degree {
-  font-size: 60px;
+  align-self: center;
+  font-size: 30px;
 }
-.quotes {
+.temp-min-max {
+  font-size: 20px;
+}
+.description {
+  color: var(--text-color);
+  font-size: 25px;
+  text-shadow: none;
+}
+/* .quotes {
   align-self: end;
+} */
+
+.forecast {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+}
+.forecast-item {
+  padding: 10px;
+  width: 17%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  @include forecast-item()
+}
+.location-img {
+  height: 40px;
+  margin: 10px;
 }
