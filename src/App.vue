@@ -9,12 +9,17 @@ export default {
       url_base: "https://api.openweathermap.org/data/2.5/weather?",
       url_forecast: "https://api.openweathermap.org/data/2.5/forecast?",
       className: "",
-      // greeting: "",
       city: "",
       location: "",
       temp: "",
-      tempMax: "",
-      tempMin: "",
+      description: "",
+      details: "",
+      wind: "",
+      humidity: "",
+      pressure: "",
+      visibility: "",
+      temp_max: "",
+      temp_min: "",
       date: new Date(),
       weekdays: [
         "Sunday",
@@ -28,18 +33,18 @@ export default {
       weekday: "",
       day: "",
       months: [
-        "January",
-        "February",
-        "March",
-        "April",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
         "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sept",
+        "Oct",
+        "Nov",
+        "Dec",
       ],
       month: "",
       year: "",
@@ -48,9 +53,8 @@ export default {
       noInfo: true,
       isError: true,
       query: "",
-      quote: "",
-      author: "",
       forecast: "",
+      icon: "",
     };
   },
   methods: {
@@ -62,11 +66,18 @@ export default {
           this.city = response.data.name;
           this.location = response.data.sys.country;
           this.temp = response.data.main.temp;
-          this.tempMax = response.data.main.temp_max;
-          this.tempMin = response.data.main.temp_min;
+          this.description = response.data.weather[0].main;
+          this.details = response.data.weather[0].description;
+          this.wind = response.data.wind.speed.toFixed(1);
+          this.humidity = response.data.main.humidity;
+          this.pressure = response.data.main.grnd_level;
+          this.visibility = response.data.visibility / 1000;
+          this.temp_max = Math.round(response.data.main.temp_max);
+          this.temp_min = Math.round(response.data.main.temp_min);
           this.weekday = this.weekdays[this.date.getDay()];
           this.day = this.date.getDate();
           this.month = this.months[this.date.getMonth()];
+          this.icon = response.data.weather[0].icon.slice(0, 2);
           this.loading = false;
           this.noInfo = false;
           this.isError = false;
@@ -84,24 +95,6 @@ export default {
         .get(forecastUrl)
         .then((response) => {
           this.forecast = response.data.list.filter((e, i) => i % 8 === 8 - 1);
-          console.log(this.forecast);
-          // const container = document.getElementById("forecast-wrap");
-          // forecast.forEach((item) => {
-          //   const src = `../dist/img/${item.weather[0].icon}.svg`;
-          //   container.innerHTML += `
-          // <div>
-          //   <div>${item.main.temp.toFixed(1)}°C</div>
-          //   <img class="location-img" src=${src} alt="" />
-          //   <div>${new Date(item.dt * 1000)
-          //     .toLocaleDateString()
-          //     .slice(0, 5)}</div>
-          //   <div>${this.weekdays[new Date(item.dt * 1000).getDay()].slice(
-          //     0,
-          //     3
-          //   )}</div>
-          // </div>`;
-          // });
-          console.log(this.forecast);
           this.loading = false;
           this.noInfo = false;
           this.isError = false;
@@ -115,16 +108,12 @@ export default {
     },
     getTime() {
       if (this.date.getHours() < 6) {
-        // this.greeting = "Good night!";
         this.className = "night";
       } else if (this.date.getHours() < 12) {
-        // this.greeting = "Good morning!";
         this.className = "morning";
       } else if (this.date.getHours() < 18) {
-        // this.greeting = "Good afternoon!";
         this.className = "day";
       } else if (this.date.getHours() < 24) {
-        // this.greeting = "Good evening!";
         this.className = "evening";
       }
     },
@@ -159,17 +148,6 @@ export default {
         this.query = "";
       }
     },
-    // getQuote() {
-    //   axios
-    //     .get("https://api.quotable.io/random")
-    //     .then((response) => {
-    //       this.quote = response.data.content;
-    //       this.author = response.data.author;
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-    // },
   },
   beforeMount() {
     this.geolocation();
@@ -183,7 +161,6 @@ export default {
     <main>
       <div v-if="loading" class="custom-loader"></div>
       <div v-else class="forecast-wrap">
-        <!-- <div class="greeting">{{ greeting }}</div> -->
         <div v-if="noGeo" class="search-box">
           <input
             type="text"
@@ -195,54 +172,169 @@ export default {
         </div>
         <div v-if="noInfo" class="no-info">What's the weather like today?</div>
         <div v-else-if="isError" class="no-info">Something went wrong :(</div>
-        <div v-else class="today">
-          <div class="day">{{ month }} {{ day }}</div>
-          <div class="day">{{ weekday }}</div>
-          <div class="location">
-            <!-- <img
-              class="location-img"
-              src="./assets/images/location.svg"
-              alt=""
-            /> -->
-            {{ city }},
-            {{ location }}
-          </div>
-          <div class="temperature-wrap">
-            <div class="temp-main">
-              <div>{{ Math.round(temp) }}</div>
-
-              <div class="degree">°C</div>
-            </div>
-            <div class="temp-min-max">
-              {{ Math.round(tempMax) }}°C/ {{ Math.round(tempMin) }}°C
-            </div>
-          </div>
-        </div>
-        <div class="forecast" id="forecast-wrap">
-          <div v-for="item in forecast" class="forecast-item" :key="item">
-            <div>
-              {{ this.weekdays[new Date(item.dt * 1000).getDay()].slice(0, 3) }}
+        <details v-else class="today">
+          <summary>
+            <div class="top-info">
+              <div>{{ month }} {{ day }}</div>
+              <div>{{ weekday }}</div>
+              <div>
+                {{ city }},
+                {{ location }}
+              </div>
             </div>
             <img
-              class="location-img"
-              :src="
-                require(`./assets/images/${item.weather[0].icon.slice(
-                  0,
-                  2
-                )}.svg`)
-              "
+              class="today-img"
+              :src="require(`./assets/images/${icon}.svg`)"
               v-bind:alt="pic"
             />
-            <div>{{ item.main.temp.toFixed(1) }}°C</div>
+            <div class="temperature-wrap">
+              <div class="temp-main">
+                <div>{{ Math.round(temp) }}</div>
+                <div class="degree">°C</div>
+              </div>
+            </div>
+            <div class="description">
+              {{ description }}
+            </div>
+            <div class="details-modal-overlay"></div>
+          </summary>
+          <div class="details-modal">
+            <div class="details-modal-title">{{ details }}</div>
+            <div class="details-modal-content">
+              <div class="details-modal-content-info">
+                <img
+                  class="details-modal-img"
+                  src="./assets/images/wind.svg"
+                  alt=""
+                />
+                <p>{{ wind }} m/s</p>
+              </div>
+              <div class="details-modal-content-info">
+                <img
+                  class="details-modal-img"
+                  src="./assets/images/humidity.svg"
+                  alt=""
+                />
+                <p>{{ humidity }}%</p>
+              </div>
+              <div class="details-modal-content-info">
+                <img
+                  class="details-modal-img"
+                  src="./assets/images/pressure.svg"
+                  alt=""
+                />
+                <p>{{ pressure }} hPa</p>
+              </div>
+              <div class="details-modal-content-info">
+                <img
+                  class="details-modal-img"
+                  src="./assets/images/visibility.svg"
+                  alt=""
+                />
+                <p>{{ visibility }} km</p>
+              </div>
+              <div class="details-modal-content-info">
+                <img
+                  class="details-modal-img"
+                  src="./assets/images/temp-max.svg"
+                  alt=""
+                />
+                <p>{{ temp_max }}°C</p>
+              </div>
+              <div class="details-modal-content-info">
+                <img
+                  class="details-modal-img"
+                  src="./assets/images/temp-min.svg"
+                  alt=""
+                />
+                <p>{{ temp_min }}°C</p>
+              </div>
+            </div>
           </div>
+        </details>
+        <div class="forecast" id="forecast-wrap">
+          <details v-for="item in forecast" class="forecast-item" :key="item">
+            <summary>
+              <div>
+                {{
+                  this.weekdays[new Date(item.dt * 1000).getDay()].slice(0, 3)
+                }}
+              </div>
+              <img
+                class="forecast-img"
+                :src="
+                  require(`./assets/images/${item.weather[0].icon.slice(
+                    0,
+                    2
+                  )}.svg`)
+                "
+                v-bind:alt="pic"
+              />
+              <div>{{ item.main.temp.toFixed(0) }}°C</div>
+              <div class="details-modal-overlay"></div>
+            </summary>
+            <div class="details-modal">
+              <div class="details-modal-title">
+                {{
+                  new Date(item.dt * 1000).toDateString().slice(3, 11).trim()
+                }},
+                {{ new Date(item.dt * 1000).toDateString().slice(0, 3) }}
+              </div>
+              <div class="details-modal-content">
+                {{ item.weather[0].description }}
+                <div class="details-modal-content-info">
+                  <img
+                    class="details-modal-img"
+                    src="./assets/images/wind.svg"
+                    alt=""
+                  />
+                  <p>{{ item.wind.speed.toFixed(1) }} m/s</p>
+                </div>
+                <div class="details-modal-content-info">
+                  <img
+                    class="details-modal-img"
+                    src="./assets/images/humidity.svg"
+                    alt=""
+                  />
+                  <p>{{ item.main.humidity }}%</p>
+                </div>
+                <div class="details-modal-content-info">
+                  <img
+                    class="details-modal-img"
+                    src="./assets/images/pressure.svg"
+                    alt=""
+                  />
+                  <p>{{ item.main.grnd_level }} hPa</p>
+                </div>
+                <div class="details-modal-content-info">
+                  <img
+                    class="details-modal-img"
+                    src="./assets/images/visibility.svg"
+                    alt=""
+                  />
+                  <p>{{ item.visibility / 1000 }} km</p>
+                </div>
+                <div class="details-modal-content-info">
+                  <img
+                    class="details-modal-img"
+                    src="./assets/images/temp-max.svg"
+                    alt=""
+                  />
+                  <p>{{ Math.round(item.main.temp_max) }}°C</p>
+                </div>
+                <div class="details-modal-content-info">
+                  <img
+                    class="details-modal-img"
+                    src="./assets/images/temp-min.svg"
+                    alt=""
+                  />
+                  <p>{{ Math.round(item.main.temp_min) }}°C</p>
+                </div>
+              </div>
+            </div>
+          </details>
         </div>
-        <!-- <div class="quotes">
-        <div>{{ quote }}</div>
-        <div>{{ author }}</div>
-      </div> -->
       </div>
     </main>
   </div>
 </template>
-
-<style></style>
