@@ -2,6 +2,7 @@
 
 Canon event for every developer, so here I am :]
 
-Openweathermap, quotable, axios
+Openweathermap, axios
 
 Still working on styles and some more functionality
+Click on items to see more weather info
