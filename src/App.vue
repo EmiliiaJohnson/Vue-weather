@@ -152,7 +152,6 @@ export default {
   beforeMount() {
     this.geolocation();
     this.getTime();
-    // this.getQuote();
   },
 };
 </script>

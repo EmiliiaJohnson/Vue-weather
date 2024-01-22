@@ -184,11 +184,16 @@ main:before {
 }
 .description {
   font-size: 25px;
-  font-family: "Zen";
+  font-family: "Zen", Arial, sans-serif;
 }
 summary {
-  list-style: none;
   @include display-flex();
+}
+details > summary {
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
 }
 details[open] {
   background-color: #fff;
