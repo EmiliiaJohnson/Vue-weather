@@ -70,7 +70,7 @@ export default {
           this.details = response.data.weather[0].description;
           this.wind = response.data.wind.speed.toFixed(1);
           this.humidity = response.data.main.humidity;
-          this.pressure = response.data.main.grnd_level;
+          this.pressure = response.data.main.pressure;
           this.visibility = response.data.visibility / 1000;
           this.temp_max = Math.round(response.data.main.temp_max);
           this.temp_min = Math.round(response.data.main.temp_min);
@@ -304,7 +304,7 @@ export default {
                     src="./assets/images/pressure.svg"
                     alt=""
                   />
-                  <p>{{ item.main.grnd_level }} hPa</p>
+                  <p>{{ item.main.pressure }} hPa</p>
                 </div>
                 <div class="details-modal-content-info">
                   <img
